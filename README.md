@@ -1,5 +1,6 @@
 # SimpleCalculatorGUI
 Very simple calculator GUI application I made using Qt
 
-<img width="494" alt="Screen Shot 2021-06-29 at 5 01 40 PM" src="https://user-images.githubusercontent.com/73256760/123882511-c517e300-d8fb-11eb-98f1-55847e630eed.png">
+<img width="466" alt="Screen Shot 2021-06-30 at 12 13 49 AM" src="https://user-images.githubusercontent.com/73256760/123918100-63c23500-d938-11eb-8a77-d303a7ba3ca4.png">
+
 
