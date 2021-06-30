@@ -6,13 +6,15 @@
 template<typename T> bool typeLimitReached(T);
 
 // typedef double t_int;
-double calcResult = 0;
+double calcResult = 0.0;
 bool multTrigger = false;
 bool divTrigger = false;
 bool addTrigger = false;
 bool subTrigger = false;
 bool powerTrigger = false;
 bool moduloTrigger = false;
+
+bool resultClear = false;
 
 const int oprtArrSize = 6;
 bool *OprtTriggers[oprtArrSize] = {&multTrigger, &divTrigger, &addTrigger, &subTrigger, &powerTrigger, &moduloTrigger}; // array of pointers
@@ -54,7 +56,12 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::OperandButton_Pressed() {
-    QPushButton *button = (QPushButton *)sender(); // return a pointer to the button that was pressed
+    QPushButton *button = (QPushButton *)sender(); // return a pointer of the button that was pressed
+    if(resultClear) {
+        calcResult = 0.0; // reset calculated result back to 0
+        ui->DisplayLine->setText("");
+        resultClear = false;
+    }
     QString buttonValue = button->text();
     QString displayValue = ui->DisplayLine->text();
     if((displayValue.toDouble() == 0) || (displayValue.toDouble() == 0.0)) {
@@ -68,6 +75,7 @@ void MainWindow::OperandButton_Pressed() {
 
 
 void MainWindow::OperatorButton_Pressed() {
+    resultClear = false;
     for(int i = 0; i < oprtArrSize; i++) *OprtTriggers[i] = false; // nulify any previous operator pressed
     QString displayValue = ui->DisplayLine->text(); // DisplayLine->text() gives us the current text
     calcResult = displayValue.toDouble();  // convert the QString object into a double
@@ -83,6 +91,7 @@ void MainWindow::OperatorButton_Pressed() {
         ClearCalc();
         ui->DisplayLine->setText("Unknown Error");
     }
+    ui->PreviousOprndLabel->setText(QString::number(calcResult) + oprtType);
     ui->DisplayLine->setText("");
 }
 
@@ -103,7 +112,6 @@ void MainWindow::GetResult() {
         ui->DisplayLine->setText("Error");
         return;
     }
-
     switch(oprtType) {
         case(0):
             result = calcResult * displayValue_dbl;
@@ -129,11 +137,13 @@ void MainWindow::GetResult() {
                 break;
     }
     ui->DisplayLine->setText(QString::number(result, 'g', 16)); // 16 digits before number turns into exponent 'g' use any format
-
+    ui->PreviousOprndLabel->setText(ui->PreviousOprndLabel->text() + displayValue_qstr);
+    resultClear = true;
 }
 
 void MainWindow::ClearCalc() {
     calcResult = 0.0;
+    ui->PreviousOprndLabel->setText("");
     ui->DisplayLine->setText(QString::number(0.0));
     for(int i = 0; i < oprtArrSize; i++) { // set everything back to false
         *OprtTriggers[i] = false;
